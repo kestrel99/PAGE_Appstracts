@@ -21,6 +21,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+
     }
     return self;
 }
@@ -39,7 +40,7 @@
 -(void)handleSearchForTerm:(NSString *)searchTerm {
 	
 	//viewType = searchTerm;
-	
+
 	NSString* fileToSaveTo = @"PageAbstracts";
     NSArray* path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
     NSString* documentsDirectory = [path objectAtIndex:0];
@@ -56,7 +57,29 @@
 		NSString *querySQL = [NSString stringWithFormat: @"SELECT number, title, firstname, lastname, eTime, _id, content FROM Abstracts WHERE (title || ' ' || content  || ' ' || author  || ' ' || firstname || ' ' || type)  LIKE '%%%@%%' ORDER BY number", searchTerm];
 		const char *query_stmt = [querySQL UTF8String];
 		
+        //const char* sqlStatement = "SELECT COUNT(*) FROM Abstracts";
+        //        sqlite3_stmt *statement;
+        //
+        //      if( sqlite3_prepare_v2(abstractsDB, sqlStatement, -1, &statement, NULL) == SQLITE_OK )
+        //       {
+        //          //Loop through all the returned rows (should be just one)
+        //          while( sqlite3_step(statement) == SQLITE_ROW )
+        //          {
+        //              NSInteger count = sqlite3_column_int(statement, 0);
+        //              NSLog(@"Rowcount is %d",count);
+        //          }
+        //      }
+        //      else
+        //      {
+        //          NSLog( @"Failed from sqlite3_prepare_v2. Error is:  %s", sqlite3_errmsg(abstractsDB) );
+        //      }
+
+                // Finalize and close database.
+        // sqlite3_finalize(statement);
+                //sqlite3_close(articlesDB);
+            
 		if (sqlite3_prepare_v2(abstractsDB, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
+            
 			while (sqlite3_step(statement) == SQLITE_ROW) {
 				NSString *code = @"";
                 if (sqlite3_column_text(statement,0))
@@ -73,6 +96,7 @@
                 NSString *lastName = @"";
                 if (sqlite3_column_text(statement,3))
                     lastName = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement,3)];
+                //NSLog(lastName);
 				
 				NSString *eTime = @"";
                 if (sqlite3_column_text(statement,4))
